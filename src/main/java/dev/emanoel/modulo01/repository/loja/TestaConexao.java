@@ -1,4 +1,4 @@
-package dev.emanoel.modulo01.lojavirtualrepository;
+package dev.emanoel.modulo01.repository.loja;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
