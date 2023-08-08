@@ -1,6 +1,5 @@
 package dev.emanoel.modulo05.poolconnection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PoolSizeTest {
