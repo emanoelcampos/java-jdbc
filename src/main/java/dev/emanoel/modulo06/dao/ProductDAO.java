@@ -1,6 +1,7 @@
 package dev.emanoel.modulo06.dao;
 
 import dev.emanoel.modulo06.model.Product;
+import dev.emanoel.modulo07.model.ProductCategory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -41,7 +42,31 @@ public class ProductDAO {
 
             try(ResultSet resultSet = preparedStatement.getResultSet()) {
                 while(resultSet.next()) {
-                    Product product = new Product(resultSet.getInt("ProductKey"), resultSet.getString("ProductName"), resultSet.getString("BrandName"), resultSet.getString("ColorName"));
+                    Product product = new Product(resultSet.getInt("ProductKey"), resultSet.getString("ProductLabel"), resultSet.getString("ProductName"), resultSet.getString("BrandName"), resultSet.getString("ColorName"));
+                    products.add(product);
+                }
+            }
+        }
+        return products;
+    }
+
+    public List<Product> buscar(ProductCategory productCategory) throws SQLException {
+        List<Product> products= new ArrayList<>();
+
+        String sql = "SELECT TOP(10) ProductKey, ProductLabel, ProductName, BrandName, ColorName FROM DimProduct WHERE ProductLabel = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1,productCategory.getProductCategoryLabel());
+            preparedStatement.execute();
+
+            try(ResultSet resultSet = preparedStatement.getResultSet()) {
+                while(resultSet.next()) {
+                    Product product = new Product(
+                            resultSet.getInt("ProductKey"),
+                            resultSet.getString("ProductLabel"),
+                            resultSet.getString("ProductName"),
+                            resultSet.getString("BrandName"),
+                            resultSet.getString("ColorName"));
                     products.add(product);
                 }
             }
