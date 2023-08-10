@@ -6,11 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductPersistence {
+public class ProductDAO {
 
     private Connection connection;
 
-    public ProductPersistence(Connection connection) {
+    public ProductDAO(Connection connection) {
         this.connection = connection;
     }
 

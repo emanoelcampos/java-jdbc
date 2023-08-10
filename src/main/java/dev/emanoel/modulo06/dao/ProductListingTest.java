@@ -14,8 +14,8 @@ public class ProductListingTest {
         ConnectionFactory connectionFactory = new ConnectionFactory();
 
         try(Connection connection = connectionFactory.recuperaConexao()){
-            ProductPersistence productPersistence = new ProductPersistence(connection);
-            List<Product> listaProdutos = productPersistence.listar();
+            ProductDAO productDAO = new ProductDAO(connection);
+            List<Product> listaProdutos = productDAO.listar();
             listaProdutos.stream().forEach(lp -> System.out.println(lp));
         } catch (SQLException e) {
             e.printStackTrace();

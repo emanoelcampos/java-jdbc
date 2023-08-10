@@ -6,7 +6,7 @@ import dev.emanoel.modulo06.model.Product;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ProductPersistenceTest {
+public class ProductDAOTest {
 
     public static void main(String[] args) {
 
@@ -15,8 +15,8 @@ public class ProductPersistenceTest {
         ConnectionFactory connectionFactory = new ConnectionFactory();
 
         try(Connection connection = connectionFactory.recuperaConexao()){
-            ProductPersistence productPersistence = new ProductPersistence(connection);
-            productPersistence.salvarProduto(product);
+            ProductDAO productDAO = new ProductDAO(connection);
+            productDAO.salvarProduto(product);
         } catch (SQLException e) {
             e.printStackTrace();
         }
