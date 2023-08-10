@@ -1,6 +1,8 @@
 package dev.emanoel.modulo07.test;
 
 import dev.emanoel.modulo05.poolconnection.ConnectionFactory;
+import dev.emanoel.modulo06.dao.ProductDAO;
+import dev.emanoel.modulo06.model.Product;
 import dev.emanoel.modulo07.dao.ProductCategoryDAO;
 import dev.emanoel.modulo07.model.ProductCategory;
 
@@ -18,7 +20,16 @@ public class ProductCategoryListingTest {
         try(Connection connection = connectionFactory.recuperaConexao()) {
             ProductCategoryDAO productCategoryDAO = new ProductCategoryDAO(connection);
             List<ProductCategory> categories = productCategoryDAO.listar();
-            categories.stream().forEach(lpc -> System.out.println(lpc));
+            categories.stream().forEach(productCategory ->  {
+                System.out.println(productCategory.getProductCategoryName());
+                try {
+                    for(Product product : new ProductDAO(connection).buscar(productCategory)) {
+                        System.out.println(productCategory.getProductCategoryName() + " - " + product.getProductName());
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }
