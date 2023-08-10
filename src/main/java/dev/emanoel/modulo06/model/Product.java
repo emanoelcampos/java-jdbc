@@ -3,6 +3,7 @@ package dev.emanoel.modulo06.model;
 public class Product {
 
     private Integer productKey;
+    private String productLabel;
     private String productName;
     private String brandName;
     private String colorName;
@@ -13,7 +14,7 @@ public class Product {
         this.colorName = colorName;
     }
 
-    public Product(Integer productKey, String productName, String brandName, String colorName) {
+    public Product(Integer productKey, String productLabel, String productName, String brandName, String colorName) {
         this.productKey = productKey;
         this.productName = productName;
         this.brandName = brandName;
@@ -30,6 +31,10 @@ public class Product {
 
     public String getColorName() {
         return colorName;
+    }
+
+    public String getProductLabel() {
+        return productLabel;
     }
 
     public void setProductKey(Integer productKey) {
