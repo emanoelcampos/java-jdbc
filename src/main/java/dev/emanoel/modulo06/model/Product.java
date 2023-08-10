@@ -13,6 +13,13 @@ public class Product {
         this.colorName = colorName;
     }
 
+    public Product(Integer productKey, String productName, String brandName, String colorName) {
+        this.productKey = productKey;
+        this.productName = productName;
+        this.brandName = brandName;
+        this.colorName = colorName;
+    }
+
     public String getProductName() {
         return productName;
     }
