@@ -3,6 +3,8 @@ package dev.emanoel.modulo06.dao;
 import dev.emanoel.modulo06.model.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductPersistence {
 
@@ -27,5 +29,23 @@ public class ProductPersistence {
                 }
             }
         }
+    }
+
+    public List<Product> listar() throws SQLException {
+        List<Product> products= new ArrayList<>();
+
+        String sql = "SELECT TOP(10) ProductKey, ProductName, BrandName, ColorName FROM DimProduct";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.execute();
+
+            try(ResultSet resultSet = preparedStatement.getResultSet()) {
+                while(resultSet.next()) {
+                    Product product = new Product(resultSet.getInt("ProductKey"), resultSet.getString("ProductName"), resultSet.getString("BrandName"), resultSet.getString("ColorName"));
+                    products.add(product);
+                }
+            }
+        }
+        return products;
     }
 }
