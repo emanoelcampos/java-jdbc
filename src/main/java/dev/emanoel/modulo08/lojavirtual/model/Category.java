@@ -1,9 +1,13 @@
 package dev.emanoel.modulo08.lojavirtual.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Category {
 
     private Integer id;
     private String nome;
+    private List<Product> products = new ArrayList<>();
 
     public Category() {
     }
