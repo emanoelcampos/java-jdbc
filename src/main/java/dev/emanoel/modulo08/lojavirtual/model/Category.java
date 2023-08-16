@@ -25,8 +25,16 @@ public class Category {
         return nome;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
     public String toString() {
         return String.format("As categorias são: %d, %s",
                 this.id, this.nome);
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
     }
 }
