@@ -45,6 +45,10 @@ public class Product {
         this.id = id;
     }
 
+    public void setCategoria_id(Integer categoria_id) {
+        this.categoria_id = categoria_id;
+    }
+
     public String toString() {
         return String.format("Os produtos são: %d, %s, %s, %s",
                 this.id, this.nome, this.descricao, this.categoria_id);
