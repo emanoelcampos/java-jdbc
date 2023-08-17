@@ -32,6 +32,25 @@ public class ProductDAO {
 
     }
 
+    public void saveWithCategory(Product product) throws SQLException {
+        String insertQuery = "INSERT INTO PRODUTO (NOME, DESCRICAO, CATEGORIA_ID) VALUES (?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+
+            preparedStatement.setString(1, product.getNome());
+            preparedStatement.setString(2, product.getDescricao());
+            preparedStatement.setInt(3, product.getCategoria_id());
+
+            preparedStatement.execute();
+
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                while (resultSet.next()) {
+                    product.setId(resultSet.getInt(1));
+                }
+            }
+        }
+    }
+
     public List<Product> listProduct() throws SQLException {
         List<Product> products= new ArrayList<>();
 
@@ -54,24 +73,42 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> searchByCategory(Category category) throws SQLException {
+    public void deleteProduct(Integer id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM PRODUTO WHERE ID = ?")) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+        }
+    }
+
+    public void updateProduct(String nome, String descricao, Integer id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("UPDATE PRODUTO P SET P.NOME = ?, P.DESCRICAO = ? WHERE ID = ?")) {
+            preparedStatement.setString(1, nome);
+            preparedStatement.setString(2, descricao);
+            preparedStatement.setInt(3, id);
+            preparedStatement.execute();
+        }
+    }
+
+    private void trasformResultSetProduct(List<Product> products, PreparedStatement pstm) throws SQLException {
+        try (ResultSet resultSet = pstm.getResultSet()) {
+            while (resultSet.next()) {
+                Product product = new Product(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3));
+
+                products.add(product);
+            }
+        }
+    }
+
+    public List<Product> searchProduct(Category category) throws SQLException {
         List<Product> products = new ArrayList<>();
+        String selectQuery = "SELECT ID, NOME, DESCRICAO FROM PRODUTO WHERE CATEGORIA_ID = ?";
 
-        String selectWhereQuery = "SELECT id, nome, descricao FROM produto WHERE categoria_id = ?";
-
-        try(PreparedStatement preparedStatement = connection.prepareStatement(selectWhereQuery)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
             preparedStatement.setInt(1, category.getId());
             preparedStatement.execute();
 
-            try(ResultSet resultSet = preparedStatement.getResultSet()) {
-                while(resultSet.next()) {
-                    Product product = new Product(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3));
-                    products.add(product);
-                }
-            }
+            trasformResultSetProduct(products, preparedStatement);
         }
         return products;
     }
