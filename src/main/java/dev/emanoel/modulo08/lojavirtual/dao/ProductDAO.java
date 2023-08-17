@@ -15,19 +15,23 @@ public class ProductDAO {
         this.connection = connection;
     }
 
-    public void saveProduct(Product product) throws SQLException {
-        String insertQuery = "INSERT INTO produto (nome, descricao) VALUES (?, ?)";
+    public void saveProduct(Product product) {
+        try {
+            String insertQuery = "INSERT INTO produto (nome, descricao) VALUES (?, ?)";
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, product.getNome());
-            preparedStatement.setString(2, product.getDescricao());
-            preparedStatement.execute();
+            try(PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, product.getNome());
+                preparedStatement.setString(2, product.getDescricao());
+                preparedStatement.execute();
 
-            try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                while(resultSet.next()) {
-                    product.setId(resultSet.getInt(1));
+                try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    while(resultSet.next()) {
+                        product.setId(resultSet.getInt(1));
+                    }
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -51,43 +55,55 @@ public class ProductDAO {
         }
     }
 
-    public List<Product> listProduct() throws SQLException {
-        List<Product> products= new ArrayList<>();
+    public List<Product> listProduct() {
+        try {
+            List<Product> products= new ArrayList<>();
 
-        String selectQuery = "SELECT id, nome, descricao, categoria_id FROM produto";
+            String selectQuery = "SELECT id, nome, descricao, categoria_id FROM produto";
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
-            preparedStatement.execute();
+            try(PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.execute();
 
-            try(ResultSet resultSet = preparedStatement.getResultSet()) {
-                while(resultSet.next()) {
-                    Product product = new Product(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getInt(4));
-                    products.add(product);
+                try(ResultSet resultSet = preparedStatement.getResultSet()) {
+                    while(resultSet.next()) {
+                        Product product = new Product(
+                                resultSet.getInt(1),
+                                resultSet.getString(2),
+                                resultSet.getString(3),
+                                resultSet.getInt(4));
+                        products.add(product);
+                    }
                 }
             }
-        }
-        return products;
-    }
-
-    public void deleteProduct(Integer id) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM PRODUTO WHERE ID = ?")) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+            return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void updateProduct(String nome, String descricao, Integer id) throws SQLException {
-        try (PreparedStatement preparedStatement = connection
-                .prepareStatement("UPDATE PRODUTO P SET P.NOME = ?, P.DESCRICAO = ? WHERE ID = ?")) {
-            preparedStatement.setString(1, nome);
-            preparedStatement.setString(2, descricao);
-            preparedStatement.setInt(3, id);
-            preparedStatement.execute();
+    public void deleteProduct(Integer id) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM PRODUTO WHERE ID = ?")) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void updateProduct(String nome, String descricao, Integer id) {
+       try {
+           try (PreparedStatement preparedStatement = connection
+                   .prepareStatement("UPDATE PRODUTO P SET P.NOME = ?, P.DESCRICAO = ? WHERE ID = ?")) {
+               preparedStatement.setString(1, nome);
+               preparedStatement.setString(2, descricao);
+               preparedStatement.setInt(3, id);
+               preparedStatement.execute();
+           }
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
     }
 
     private void trasformResultSetProduct(List<Product> products, PreparedStatement pstm) throws SQLException {
