@@ -5,8 +5,6 @@ import dev.emanoel.modulo08.lojavirtual.factory.ConnectionFactory;
 import dev.emanoel.modulo08.lojavirtual.model.Category;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryController {
